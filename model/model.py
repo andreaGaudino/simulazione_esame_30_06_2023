@@ -21,6 +21,7 @@ class Model:
         self.graph.clear()
         anni = DAO.getNodes(team)
         self.graph.add_nodes_from(anni)
+
         for i in DAO.getEdges(team):
             self.graph.add_edge(i[0], i[1], weight = i[2])
         for v in anni:

@@ -55,9 +55,18 @@ class DAO():
 
         cursor = conn.cursor(dictionary=True)
         query = """select a1.`year` as y1, a.`year` as y2, count(a.playerID) as tot
-        from lahmansbaseballdb.appearances a1, lahmansbaseballdb.appearances a
-        where a1.`year` < a.`year` and a1.teamCode = %s and a.teamCode = a1.teamCode and a.ID != a1.ID and a.playerID = a1.playerID
-        group by a1.`year`, a.`year`"""
+                    from lahmansbaseballdb.appearances a1, lahmansbaseballdb.appearances a, lahmansbaseballdb.teams t 
+                    where a1.`year` < a.`year` 
+                    and t.name = %s
+                    and t.`year` = a.`year` 
+                    and a1.teamCode = t.teamCode 
+                    and a.teamCode = a1.teamCode 
+                    and a.teamCode = t.teamCode 
+                    and a.ID != a1.ID 
+                    and a.playerID = a1.playerID
+                    group by a1.`year`, a.`year`
+                    order by a1.`year` 
+                    """
 
         cursor.execute(query, (team,))
 
