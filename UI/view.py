@@ -39,6 +39,15 @@ class View(ft.UserControl):
         self._controller.fillDDTeams()
 
 
+        #row2
+
+        self.ddAnno = ft.Dropdown(label="Anno")
+        self.btnDettagli = ft.ElevatedButton(text="Dettagli grafo", on_click=self._controller.handle_dettagli)
+        row2 = ft.Row([ft.Container(self.ddAnno, width=300),
+                      ft.Container(self.btnDettagli, width=300)], alignment=ft.MainAxisAlignment.CENTER)
+        self._page.controls.append(row2)
+        #self._controller.fillDDYear()
+
 
 
         self.txt_result = ft.ListView(expand=1, spacing=10, padding=20, auto_scroll=True)
