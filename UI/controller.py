@@ -58,6 +58,26 @@ class Controller:
         self._view.update_page()
 
 
+    def handleSimulazione(self, e):
+        tifosi = self._view.txtTifosi.value
+        if tifosi is None or tifosi=="":
+            self._view.txt_result.clean()
+            self._view.txt_result.controls.append(ft.Text(f"Numero tifosi non inserito"))
+            self._view.update_page()
+            return
+        try:
+            tifosiInt = int(tifosi)
+
+        except ValueError:
+            self._view.txt_result.clean()
+            self._view.txt_result.controls.append(ft.Text(f"Numero tifosi non intero"))
+            self._view.update_page()
+            return
+
+        self._model.simulazione(tifosiInt, self.anno, self.squadra)
+
+
+
 
 
 

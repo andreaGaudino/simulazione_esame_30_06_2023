@@ -36,7 +36,7 @@ class DAO():
         query = """select `year` 
                     from lahmansbaseballdb.teams 
                     where name = %s
-                    order by name, `year` """
+                    order by `year` """
 
         cursor.execute(query, (team,))
 
@@ -58,7 +58,7 @@ class DAO():
                     from lahmansbaseballdb.appearances a1, lahmansbaseballdb.appearances a, lahmansbaseballdb.teams t 
                     where a1.`year` < a.`year` 
                     and t.name = %s
-                    and t.`year` = a.`year` 
+                    and t.`year` = a1.`year` 
                     and a1.teamCode = t.teamCode 
                     and a.teamCode = a1.teamCode 
                     and a.teamCode = t.teamCode 
@@ -72,6 +72,35 @@ class DAO():
 
         for row in cursor:
             result.append([row["y1"], row["y2"], row["tot"]])
+
+        cursor.close()
+        conn.close()
+        return result
+
+    @staticmethod
+    def getPlayers(team, anno):
+        conn = DBConnect.get_connection()
+
+        result = {}
+
+        cursor = conn.cursor(dictionary=True)
+        query = """select a.`year` as anno, a.playerID as player
+                    from lahmansbaseballdb.appearances a, lahmansbaseballdb.teams t 
+                    where t.name = %s
+                    and t.teamCode = a.teamCode 
+                    and t.`year`= a.`year`
+                    and t.`year`>= %s"""
+
+        cursor.execute(query, (team,anno))
+
+        for row in cursor:
+            year = row['anno']
+            giocatore = row['player']
+            if year not in result:
+                result[year] = [giocatore]
+            else:
+                result[year].append(giocatore)
+
 
         cursor.close()
         conn.close()

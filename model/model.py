@@ -40,6 +40,10 @@ class Model:
             final[k] = result[k]
         return final
 
+
+    def simulazione(self, tifosi, anno, squadra):
+
+
     def graphDetails(self):
         return len(self.graph.nodes), len(self.graph.edges)
 

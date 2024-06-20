@@ -48,6 +48,11 @@ class View(ft.UserControl):
         self._page.controls.append(row2)
         #self._controller.fillDDYear()
 
+        #row3
+        self.txtTifosi = ft.TextField(label="Tifosi")
+        self.btnSimulaTifosi = ft.ElevatedButton(text="Simula tifosi", on_click=self._controller.handleSimulazione)
+
+
 
 
         self.txt_result = ft.ListView(expand=1, spacing=10, padding=20, auto_scroll=True)
