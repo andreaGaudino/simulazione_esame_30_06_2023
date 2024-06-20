@@ -51,12 +51,14 @@ class View(ft.UserControl):
         #row3
         self.txtTifosi = ft.TextField(label="Tifosi")
         self.btnSimulaTifosi = ft.ElevatedButton(text="Simula tifosi", on_click=self._controller.handleSimulazione)
+        row3 = ft.Row([ft.Container(self.txtTifosi, width=300),
+                      ft.Container(self.btnSimulaTifosi, width=300)], alignment=ft.MainAxisAlignment.CENTER)
 
 
 
-
-        self.txt_result = ft.ListView(expand=1, spacing=10, padding=20, auto_scroll=True)
+        self.txt_result = ft.ListView(expand=1, auto_scroll=True)
         self._page.controls.append(self.txt_result)
+        self._page.controls.append(row3)
         self._page.update()
     @property
     def controller(self):

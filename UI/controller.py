@@ -74,7 +74,13 @@ class Controller:
             self._view.update_page()
             return
 
-        self._model.simulazione(tifosiInt, self.anno, self.squadra)
+        risultato, tifosiPersi = self._model.simulazione(tifosiInt, self.anno, self.squadra)
+        self._view.txt_result.controls.append(ft.Text(f"Numero tifosi persi: {tifosiPersi}"))
+        for i in risultato:
+            self._view.txt_result.controls.append(ft.Text(f"Il giocatore: {i} alla fine delle simulazione ha {risultato[i]} tifosi"))
+
+
+        self._view.update_page()
 
 
 

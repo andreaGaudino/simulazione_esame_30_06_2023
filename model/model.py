@@ -1,4 +1,5 @@
 import copy
+import random
 from math import sqrt
 #from geopy.distance import geodesic
 
@@ -42,6 +43,51 @@ class Model:
 
 
     def simulazione(self, tifosi, anno, squadra):
+        tifosiPersi = 0
+        dizio = DAO.getPlayers(squadra, anno)
+        #condizioni iniziali
+        giocatoriAnnoPrecedente = dizio[anno]
+        numGiocatori = len(giocatoriAnnoPrecedente)
+        tifosiPlayer = {}
+        for player in giocatoriAnnoPrecedente:
+            tifosiPlayer[player] = round(tifosi/numGiocatori)
+        dizio.pop(anno)
+        for year in dizio:
+            giocatoriAttuali = dizio[year]
+            for g in giocatoriAnnoPrecedente:
+                if g in giocatoriAttuali:
+                    tif = tifosiPlayer[g]
+                    tifosiPlayer[g] = round(tif*0.9)
+                    giocatore = g
+                    while giocatore == g:
+                        giocatore = random.choice(giocatoriAttuali)
+                    if giocatore not in tifosiPlayer:
+                        tifosiPlayer[giocatore] = round(0.1*tif)
+                    else:
+                        tifosiPlayer[giocatore] += round(0.1 * tif)
+                    #giocatoriAnnoPrecedente = giocatoriAttuali
+                else:
+                    tifosiPersi += round(tifosiPlayer[g]*0.1)
+                    tifosiNuovi = round(tifosiPlayer[g]*0.9)
+                    tifosiPlayer[g] = 0
+                    giocatoriNuovi = [e for e in giocatoriAttuali if e not in giocatoriAnnoPrecedente]
+                    giocatoriGiaPresenti = [item for item in giocatoriAttuali if item in giocatoriAnnoPrecedente]
+                    percentage = random.random()
+                    if percentage< 0.75:
+                        giocatoreRandom = random.choice(giocatoriNuovi)
+                        tifosiPlayer[giocatoreRandom] = tifosiNuovi
+                    else:
+                        giocatoreRandom = random.choice(giocatoriGiaPresenti)
+                        tifosiPlayer[giocatoreRandom] += tifosiNuovi
+            giocatoriAnnoPrecedente = copy.deepcopy(giocatoriAttuali)
+
+        return tifosiPlayer, tifosiPersi
+
+
+
+
+
+
 
 
     def graphDetails(self):
