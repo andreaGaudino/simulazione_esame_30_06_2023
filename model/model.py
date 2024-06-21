@@ -54,34 +54,49 @@ class Model:
         dizio.pop(anno)
         for year in dizio:
             giocatoriAttuali = dizio[year]
+            giocatoriNuovi = [e for e in giocatoriAttuali if e not in giocatoriAnnoPrecedente]
+            giocatoriGiaPresenti = [item for item in giocatoriAttuali if item in giocatoriAnnoPrecedente]
             for g in giocatoriAnnoPrecedente:
-                if g in giocatoriAttuali:
-                    tif = tifosiPlayer[g]
-                    tifosiPlayer[g] = round(tif*0.9)
-                    giocatore = g
-                    while giocatore == g:
-                        giocatore = random.choice(giocatoriAttuali)
-                    if giocatore not in tifosiPlayer:
-                        tifosiPlayer[giocatore] = round(0.1*tif)
+                if tifosiPlayer[g] != 0:
+                    if g in giocatoriAttuali:
+                        tif = tifosiPlayer[g]
+                        tifosiPlayer[g] = round(tif*0.9)
+                        giocatore = g
+                        while giocatore == g:
+                            giocatore = random.choice(giocatoriAttuali)
+                        if giocatore not in tifosiPlayer:
+                            tifosiPlayer[giocatore] = round(0.1*tif)
+                        else:
+                            tifosiPlayer[giocatore] += round(0.1 * tif)
+                        #giocatoriAnnoPrecedente = giocatoriAttuali
                     else:
-                        tifosiPlayer[giocatore] += round(0.1 * tif)
-                    #giocatoriAnnoPrecedente = giocatoriAttuali
-                else:
-                    tifosiPersi += round(tifosiPlayer[g]*0.1)
-                    tifosiNuovi = round(tifosiPlayer[g]*0.9)
-                    tifosiPlayer[g] = 0
-                    giocatoriNuovi = [e for e in giocatoriAttuali if e not in giocatoriAnnoPrecedente]
-                    giocatoriGiaPresenti = [item for item in giocatoriAttuali if item in giocatoriAnnoPrecedente]
-                    percentage = random.random()
-                    if percentage< 0.75:
-                        giocatoreRandom = random.choice(giocatoriNuovi)
-                        tifosiPlayer[giocatoreRandom] = tifosiNuovi
-                    else:
-                        giocatoreRandom = random.choice(giocatoriGiaPresenti)
-                        tifosiPlayer[giocatoreRandom] += tifosiNuovi
+                        tifosiPersi += round(tifosiPlayer[g]*0.1)
+                        tifosiNuovi = round(tifosiPlayer[g]*0.9)
+                        tifosiPlayer[g] = 0
+
+                        percentage = random.random()
+                        if percentage< 0.75:
+                            giocatoreRandom = random.choice(giocatoriNuovi)
+                            tifosiPlayer[giocatoreRandom] = tifosiNuovi
+                        else:
+                            giocatoreRandom = random.choice(giocatoriGiaPresenti)
+                            tifosiPlayer[giocatoreRandom] += tifosiNuovi
+            for i in giocatoriNuovi:
+                if i not in tifosiPlayer:
+                    tifosiPlayer[i] = 0
             giocatoriAnnoPrecedente = copy.deepcopy(giocatoriAttuali)
 
-        return tifosiPlayer, tifosiPersi
+        idMapPlayers = DAO.getNamePlayers()
+        result = {}
+        for i in tifosiPlayer:
+            result[idMapPlayers[i]] = tifosiPlayer[i]
+        sortedResult = sorted(result, key=lambda x: x)
+        finale = {}
+        for i in sortedResult:
+            finale[i] = result[i]
+
+
+        return finale, tifosiPersi
 
 
 

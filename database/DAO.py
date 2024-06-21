@@ -105,3 +105,29 @@ class DAO():
         cursor.close()
         conn.close()
         return result
+
+    @staticmethod
+    def getNamePlayers():
+        conn = DBConnect.get_connection()
+
+        result = {}
+
+        cursor = conn.cursor(dictionary=True)
+        query = """select p.playerID as ID, p.nameFirst as Nome, p.nameLast as Cognome
+                    from lahmansbaseballdb.people p 
+                    order by p.nameLast 
+                    """
+
+        cursor.execute(query, ())
+
+        for row in cursor:
+            id = row['ID']
+            if row['Nome'] is not None:
+                cognome_nome = row['Cognome']+" "+row['Nome']
+            else:
+                cognome_nome = row['Cognome']
+            result[id] = cognome_nome
+
+        cursor.close()
+        conn.close()
+        return result

@@ -12,6 +12,7 @@ class Controller:
         # the model, which implements the logic of the program and holds the data
         self._model = model
         self.squadra = ""
+        self.anno = 0
 
     def fillDDTeams(self):
         teams = self._model.getTeams()
@@ -71,6 +72,13 @@ class Controller:
         except ValueError:
             self._view.txt_result.clean()
             self._view.txt_result.controls.append(ft.Text(f"Numero tifosi non intero"))
+            self._view.update_page()
+            return
+
+        self.anno = int(self._view.ddAnno.value)
+        if self.anno is None:
+            self._view.txt_result.clean()
+            self._view.txt_result.controls.append(ft.Text(f"Anno non selezionata"))
             self._view.update_page()
             return
 
